@@ -1,84 +1,454 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Veteran Support</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <title>Daily Scripture</title>
+  <meta name="description" content="A warm, simple page that shares a Bible verse with a plain-English explanation, search, and gentle narration." />
+  <meta name="color-scheme" content="light only">
+  <meta name="theme-color" content="#f5e9d4">
+  <meta property="og:title" content="Daily Scripture">
+  <meta property="og:description" content="A warm, simple page that shares a Bible verse with a plain-English explanation, search, and gentle narration.">
+  <meta property="og:type" content="website">
+  <style>
+    :root{
+      --ink:#2b2118;
+      --parch2:#ffefb8;
+      --head:#a86b3d;
+      --line:#eadfcd;
+      --frost2:rgba(255,255,255,.88);
+      --shadow:0 16px 40px rgba(0,0,0,.16);
+      --radius:16px;
+      --focus:#d49a6a;
+    }
+
+    /* Page + background */
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color:var(--ink);
+      background:#f5e9d4 url('assets/bg.jpg') center 50% / cover no-repeat fixed;
+      text-rendering:optimizeLegibility;
+    }
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:10;
+      display:grid; grid-template-columns:auto 1fr auto; gap:.75rem; align-items:center;
+      padding:10px 12px;
+      background:rgba(255,255,255,.62);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+      border-bottom:1px solid var(--line);
+    }
+    h1{
+      margin:0;
+      font-size:20px; font-weight:800; letter-spacing:.4px;
+      background:linear-gradient(90deg,#a86b3d,#d49a6a);
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow:0 2px 4px rgba(0,0,0,.12);
+      white-space:nowrap;
+    }
+
+    /* Search */
+    .search-wrap{position:relative}
+    .search{
+      width:100%;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:10px 12px; border-radius:12px; font-size:14px;
+      box-shadow:0 1px 0 #f5ece0 inset;
+      outline:none;
+    }
+    .search:focus{box-shadow:0 0 0 3px rgba(212,154,106,.25) inset}
+    .results{
+      position:absolute; left:0; right:0; top:calc(100% + 6px);
+      background:rgba(255,255,255,.97);
+      border:1px solid var(--line); border-radius:12px;
+      box-shadow:0 18px 40px rgba(0,0,0,.12);
+      max-height:50vh; overflow:auto; display:none;
+    }
+    .results.show{display:block}
+    .hit{padding:10px 12px; border-bottom:1px solid #f0e6d7; cursor:pointer}
+    .hit:last-child{border-bottom:0}
+    .hit:hover,.hit.active{background:#fff7ea}
+    .hit .ref{color:var(--head); font-weight:700}
+    .hit .snippet{font-size:13px; color:#5b4a3e; margin-top:2px}
+    mark{background:#fff0a6; padding:0 .1em}
+
+    /* Buttons / toggles */
+    .btns{display:flex; gap:.5rem; align-items:center; flex-wrap:wrap}
+    button{
+      margin:0; padding:10px 14px; font-size:14px;
+      border-radius:12px; border:1px solid #e5d6c2; background:#fff; color:var(--ink);
+      box-shadow:0 1px 0 #f5ece0 inset;
+    }
+    button:hover{background:#fff7ea; cursor:pointer}
+    button:focus-visible{outline:3px solid var(--focus); outline-offset:2px}
+    .toggle{display:inline-flex; align-items:center; gap:.35rem; font-size:13px; user-select:none}
+    .toggle input{accent-color:#d49a6a; width:18px; height:18px}
+
+    /* Verse card */
+    .card{
+      background:rgba(255,250,241,.86);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow), inset 0 0 1px var(--line);
+      max-width:860px; padding:22px;
+      margin:clamp(220px,60vh,360px) auto 12px;
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      animation:fade-in .5s ease-out both;
+    }
+    .ref{color:var(--head); font-weight:800; letter-spacing:.2px}
+    .text{
+      font-size:22px; line-height:1.6; background:var(--parch2);
+      padding:12px; border-radius:12px; margin-top:6px; min-height:2.6em
+    }
+
+    /* Actions under verse */
+    .actions{display:flex; gap:.5rem; margin-top:10px; flex-wrap:wrap}
+    .actions button{font-size:13px; padding:8px 12px}
+
+    /* Explanation card */
+    .explain{
+      background:var(--frost2);
+      border-radius:var(--radius);
+      box-shadow:0 16px 36px rgba(0,0,0,.12), inset 0 0 1px var(--line);
+      max-width:860px; padding:18px; margin:12px auto 40px;
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+      animation:fade-in .6s ease-out both;
+    }
+    .explain .label{color:#8b7663; font-weight:800; margin-bottom:8px; letter-spacing:.2px}
+    .explain .content{font-size:18px; line-height:1.7}
+
+    /* Responsive */
+    @media (max-width: 560px){
+      header{grid-template-columns:1fr}
+      .btns{justify-content:flex-end}
+      .text{font-size:20px}
+      .card{margin-top:clamp(170px,56vh,310px)}
+    }
+    @media (min-height:900px){ .card{margin-top:clamp(280px,62vh,420px)} }
+    @media (min-width:1024px){
+      /* Cross lower on desktop too (~65%) */
+      body{background-position:center 65%}
+      .card{margin-top:clamp(300px,68vh,520px)}
+    }
+    @media (min-aspect-ratio:16/10) and (min-width:1200px){ .card{margin-top:clamp(340px,72vh,560px)} }
+
+    /* Effects */
+    @keyframes fade-in{from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:translateY(0)}}
+    @media (prefers-reduced-motion:reduce){ .card,.explain{animation:none} }
+
+    /* Visually hidden for a11y */
+    .visually-hidden{
+      position:absolute!important; height:1px;width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px);
+      white-space:nowrap; border:0; padding:0; margin:-1px;
+    }
+  </style>
 </head>
 <body>
-  <!-- Fixed background layer -->
-  <div class="bg" role="img" aria-label="American flag at sunset with message: Stand tall, Veteran — you are not alone."></div>
-  <div class="shade" aria-hidden="true"></div>
+  <header>
+    <h1 aria-label="Daily Scripture">Daily Scripture</h1>
 
-  <!-- Off-canvas menu trigger -->
-  <header class="topbar">
-    <button class="hamburger" aria-label="Open menu" aria-controls="sidemenu" aria-expanded="false">☰</button>
-    <h1 class="sr-only">Veteran Support</h1>
+    <!-- Search -->
+    <div class="search-wrap">
+      <label for="q" class="visually-hidden">Search verses</label>
+      <input id="q" class="search" type="search" placeholder="Search: John 3:16 or words like ‘shepherd peace’…" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-controls="results" aria-expanded="false" role="combobox" />
+      <div id="results" class="results" role="listbox" aria-label="Search results"></div>
+    </div>
+
+    <div class="btns" role="group" aria-label="Playback and verse controls">
+      <label class="toggle" title="Auto-speak on page load">
+        <input id="autoSpeak" type="checkbox" checked aria-label="Auto speak on verse load" />
+        Auto-speak
+      </label>
+      <button id="againBtn" aria-label="Another verse">⟳ Another</button>
+      <button id="speakBtn" aria-label="Play or pause reading">🔊 Play</button>
+    </div>
   </header>
 
-  <!-- Off-canvas menu -->
-  <aside id="sidemenu" class="sidemenu" aria-hidden="true">
-    <div class="menu-inner">
-      <div class="menu-header">
-        <div class="support-text">Click here to help support</div>
-      </div>
+  <main>
+    <!-- Main verse -->
+    <section class="card" aria-live="polite">
+      <div class="ref" id="ref">Loading…</div>
+      <div id="text" class="text" aria-busy="true"></div>
 
-      <nav class="menu-links" aria-label="Primary">
-        <a href="#" class="menu-link">Home</a>
-        <a href="#" class="menu-link">Resources</a>
-        <a href="#" class="menu-link">Testimonials</a>
-        <a href="#" class="menu-link">About</a>
-      </nav>
-
-      <div class="menu-footer">
-        <h2 class="settings-title">Settings</h2>
-        <label class="slider-label" for="brightnessRange">Background Brightness</label>
-        <input id="brightnessRange" type="range" min="50" max="110" value="80" />
-      </div>
-    </div>
-  </aside>
-
-  <!-- Slide-out backdrop -->
-  <div class="backdrop" hidden></div>
-
-  <main class="content">
-    <!-- Hero message (kept visible as overlay in case user's image text is obscured) -->
-    <section class="hero-callout" aria-live="polite">
-      <p class="hero-text">Stand tall, Veteran — you are not alone.</p>
-    </section>
-
-    <!-- Crisis buttons -->
-    <section class="cta">
-      <a class="btn btn-red" href="tel:988" aria-label="Call 988 Veterans Crisis Line">Get Support Now</a>
-      <a class="btn btn-black" href="sms:838255" aria-label="Text 838255 Veterans Text Line">Text for Support</a>
-    </section>
-
-    <!-- Video placeholder section -->
-    <section class="videos">
-      <h2>Veteran Stories & Civilian Life Guides</h2>
-      <p class="muted">Real videos will go here. For now, this is a placeholder.</p>
-      <div class="video-grid">
-        <div class="video-card">
-          <video controls preload="metadata" poster="assets/placeholder.png">
-            <source src="" type="video/mp4" />
-          </video>
-          <div class="video-meta">Testimonial Placeholder</div>
-        </div>
-        <div class="video-card">
-          <video controls preload="metadata" poster="assets/placeholder.png">
-            <source src="" type="video/mp4" />
-          </video>
-          <div class="video-meta">After-Service Life Tips (Placeholder)</div>
-        </div>
+      <div class="actions">
+        <button id="copyBtn" aria-label="Copy verse text">📋 Copy</button>
+        <button id="shareBtn" aria-label="Share verse">🤝 Share</button>
+        <button id="toggleExplainBtn" aria-expanded="false" aria-controls="explainBox">💡 Meaning</button>
       </div>
     </section>
 
-    <footer class="footer">
-      <small>&copy; <span id="year"></span> Veteran Support</small>
-    </footer>
+    <!-- Explanation -->
+    <section class="explain" id="explainBox" hidden>
+      <div class="label">What this means</div>
+      <div class="content" id="explainText"></div>
+    </section>
   </main>
 
-  <script src="js/app.js"></script>
+  <script>
+    /* ===================== Scriptures + explanations ===================== */
+    const SCRIPTURES = [
+      { book:"John",chapter:"3",verse:"16",text:"For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",explain:"God loves the world so much that He gave Jesus for us. Anyone who trusts in Him is saved and receives eternal life."},
+      { book:"Psalms",chapter:"23",verse:"4",text:"Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.",explain:"Even in dark, threatening seasons, I don’t need to fear. God is with me, guiding and protecting me."},
+      { book:"Romans",chapter:"8",verse:"28",text:"And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",explain:"For those who love God, He is at work in every situation—good or bad—bringing about ultimate good."},
+      { book:"Philippians",chapter:"4",verse:"13",text:"I can do all things through Christ which strengtheneth me.",explain:"With Christ’s strength, I can face whatever He calls me to; I’m not relying on my own power."},
+      { book:"Jeremiah",chapter:"29",verse:"11",text:"For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",explain:"God’s heart toward His people is good—He intends hope, peace, and a future."},
+      { book:"Proverbs",chapter:"3",verse:"5",text:"Trust in the LORD with all thine heart; and lean not unto thine own understanding.",explain:"Place full confidence in God rather than depending only on your limited perspective."},
+      { book:"Proverbs",chapter:"3",verse:"6",text:"In all thy ways acknowledge him, and he shall direct thy paths.",explain:"Bring God into every part of life; He will guide your steps."},
+      { book:"Isaiah",chapter:"41",verse:"10",text:"Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",explain:"Do not be afraid—God is present, strengthening, helping, and holding you up."},
+      { book:"Matthew",chapter:"11",verse:"28",text:"Come unto me, all ye that labour and are heavy laden, and I will give you rest.",explain:"Jesus invites the weary and burdened to come to Him and find true rest."},
+      { book:"Joshua",chapter:"1",verse:"9",text:"Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.",explain:"Be strong and courageous, not fearful—God is with you everywhere you go."}
+    ];
+
+    /* ===================== Helpers ===================== */
+    const byRef = v => `${v.book} ${v.chapter}:${v.verse}`;
+    const pickRandom = a => a[Math.floor(Math.random()*a.length)];
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    // Book abbreviations
+    const BOOK_ALIASES = {
+      'ps':'Psalms','psa':'Psalms','psalm':'Psalms','psalms':'Psalms',
+      'jn':'John','jhn':'John','john':'John',
+      'prov':'Proverbs','pr':'Proverbs',
+      'rom':'Romans','rm':'Romans',
+      'phil':'Philippians','php':'Philippians',
+      'isa':'Isaiah','jer':'Jeremiah','josh':'Joshua','mt':'Matthew','matt':'Matthew'
+    };
+
+    function parseRefQuery(s){
+      const m = s.trim().match(/^([1-3]?\s*[A-Za-z\.]+)\s+(\d+):(\d+)$/);
+      if(!m) return null;
+      const raw = m[1].replace(/\./g,'').toLowerCase().replace(/\s+/g,' ').trim();
+      const book = BOOK_ALIASES[raw] || m[1].replace(/\s+/g,' ').trim();
+      return { book, chapter:m[2], verse:m[3] };
+    }
+
+    function hi(text, terms){
+      let out = text;
+      terms.forEach(t=>{
+        const re = new RegExp(`(${t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'ig');
+        out = out.replace(re,'<mark>$1</mark>');
+      });
+      return out;
+    }
+
+    function scoreHit(v, terms){
+      const hay = (byRef(v)+' '+v.text+' '+(v.explain||'')).toLowerCase();
+      let score = 0;
+      terms.forEach(t=>{
+        const idx = hay.indexOf(t);
+        if(idx===-1) return;
+        score += 5;
+        if(idx < 10) score += 2;                // early match bonus
+        if(byRef(v).toLowerCase().includes(t)) score += 2; // ref bonus
+      });
+      return score;
+    }
+
+    /* ===================== Speech ===================== */
+    const PREFERRED_NAMES = ['Samantha','Google US English','Microsoft Aria','Microsoft Jenny','Microsoft Zira','Allison','Joanna'];
+    let chosenVoice = null, speaking = false, paused = false;
+
+    function pickVoice(){
+      const voices = window.speechSynthesis.getVoices() || [];
+      for(const name of PREFERRED_NAMES){
+        const v = voices.find(v => (v.name||'').toLowerCase().includes(name.toLowerCase()) &&
+                                   (v.lang||'').toLowerCase().startsWith('en-us'));
+        if(v) return v;
+      }
+      return voices.find(v => (v.lang||'').toLowerCase().startsWith('en-us')) || voices[0] || null;
+    }
+    function ensureVoices(){
+      const tryLoad = () => {
+        const list = window.speechSynthesis.getVoices();
+        if(!list || list.length===0) return false;
+        chosenVoice = pickVoice(); return true;
+      };
+      if(!tryLoad()){
+        const iv = setInterval(()=>{ if(tryLoad()) clearInterval(iv); },120);
+        window.speechSynthesis.onvoiceschanged = ()=>{ if(tryLoad()) window.speechSynthesis.onvoiceschanged=null; };
+      }
+    }
+    function speak(text){
+      if(!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel(); speaking = true; paused = false;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = 0.96; u.pitch = 1.03;
+      if(chosenVoice) u.voice = chosenVoice;
+      u.onend = ()=>{ speaking=false; paused=false; updateSpeakBtn(); };
+      window.speechSynthesis.speak(u);
+      updateSpeakBtn();
+    }
+    function togglePause(){
+      if(!('speechSynthesis' in window)) return;
+      if(!speaking){ current && speak(current.text); return; }
+      if(!paused){ window.speechSynthesis.pause(); paused = true; }
+      else { window.speechSynthesis.resume(); paused = false; }
+      updateSpeakBtn();
+    }
+    function updateSpeakBtn(){
+      const btn = $('#speakBtn');
+      if(!speaking) btn.textContent = '🔊 Play';
+      else btn.textContent = paused ? '▶️ Resume' : '⏸️ Pause';
+    }
+
+    /* ===================== Page logic ===================== */
+    let current = null;
+
+    function setExplain(open){
+      $('#explainBox').hidden = !open;
+      $('#toggleExplainBtn').setAttribute('aria-expanded', String(open));
+    }
+
+    function showVerse(v, pushHash=true){
+      $('#ref').textContent = byRef(v);
+      $('#text').textContent = v.text;
+      $('#text').removeAttribute('aria-busy');
+      $('#explainText').textContent = v.explain || 'Explanation coming soon.';
+      setExplain(true);
+      current = v;
+      if(pushHash) history.replaceState(null,'', `#${encodeURIComponent(byRef(v))}`);
+      if($('#autoSpeak').checked){ setTimeout(()=>{ if(!chosenVoice) ensureVoices(); speak(v.text); }, 120); }
+    }
+
+    function rollRandom(){ showVerse(pickRandom(SCRIPTURES)); }
+
+    // Deep link by hash or ?ref=
+    function loadFromURL(){
+      const url = new URL(location.href);
+      let ref = url.searchParams.get('ref') || decodeURIComponent((location.hash||'').replace(/^#/,''));
+      if(!ref) return false;
+      const parsed = parseRefQuery(ref);
+      if(!parsed) return false;
+      const v = SCRIPTURES.find(s=>s.book.toLowerCase()===parsed.book.toLowerCase()&&s.chapter===String(parsed.chapter)&&s.verse===String(parsed.verse));
+      if(!v) return false;
+      showVerse(v, /*pushHash*/true);
+      return true;
+    }
+
+    /* ===================== Search ===================== */
+    const q = $('#q'), results = $('#results'); let activeIndex=-1, hits=[];
+    function clearResults(){ results.innerHTML=''; results.classList.remove('show'); activeIndex=-1; q.setAttribute('aria-expanded','false'); hits=[]; }
+    function renderResults(items, terms){
+      results.innerHTML='';
+      items.slice(0,30).forEach((v,i)=>{
+        const div=document.createElement('div'); div.className='hit'; div.dataset.index=i;
+        div.setAttribute('role','option'); div.setAttribute('aria-selected', i===activeIndex ? 'true':'false');
+        div.innerHTML=`<div class="ref">${byRef(v)}</div><div class="snippet">${hi(v.text, terms)}</div>`;
+        div.addEventListener('click',()=>{ clearResults(); showVerse(v); q.blur(); });
+        results.appendChild(div);
+      });
+      results.classList.toggle('show', items.length>0);
+      q.setAttribute('aria-expanded', String(items.length>0));
+      activeIndex = items.length ? 0 : -1;
+      updateActive();
+      hits = items;
+    }
+    function updateActive(){
+      $$('.hit').forEach((el,i)=>{
+        el.classList.toggle('active', i===activeIndex);
+        el.setAttribute('aria-selected', i===activeIndex?'true':'false');
+      });
+    }
+
+    function searchVerses(query){
+      const refQ=parseRefQuery(query); if(refQ){
+        const v=SCRIPTURES.find(s=>s.book.toLowerCase()===refQ.book.toLowerCase()&&s.chapter===String(refQ.chapter)&&s.verse===String(refQ.verse));
+        return {items:v?[v]:[],terms:[]};
+      }
+      const terms=query.toLowerCase().trim().split(/\s+/).filter(Boolean); if(!terms.length)return{items:[],terms:[]};
+      const pool=SCRIPTURES.filter(v=>{const hay=(byRef(v)+' '+v.text+' '+(v.explain||'')).toLowerCase(); return terms.every(t=>hay.includes(t));});
+      const ranked = pool
+        .map(v=>({v,score:scoreHit(v,terms)}))
+        .sort((a,b)=>b.score-a.score)
+        .map(x=>x.v);
+      return{items:ranked,terms};
+    }
+
+    // Debounce input
+    let t=null;
+    function onQueryInput(){
+      const query=q.value.trim();
+      if(t) cancelAnimationFrame(t);
+      t = requestAnimationFrame(()=>{
+        if(query.length<2){clearResults();return;}
+        const {items,terms}=searchVerses(query); renderResults(items,terms);
+      });
+    }
+    q.addEventListener('input',onQueryInput, {passive:true});
+    q.addEventListener('focus',onQueryInput, {passive:true});
+
+    // Keyboard navigation
+    q.addEventListener('keydown', e=>{
+      const open = results.classList.contains('show');
+      if(e.key==='ArrowDown' && open){ e.preventDefault(); activeIndex=Math.min(activeIndex+1, hits.length-1); updateActive(); }
+      if(e.key==='ArrowUp' && open){ e.preventDefault(); activeIndex=Math.max(activeIndex-1, 0); updateActive(); }
+      if(e.key==='Enter' && open && activeIndex>-1){ e.preventDefault(); const v=hits[activeIndex]; clearResults(); showVerse(v); q.blur(); }
+      if(e.key==='Escape'){ clearResults(); }
+      if(e.key==='/'&&document.activeElement!==q){ e.preventDefault(); q.focus(); q.select(); }
+      if(e.key.toLowerCase()==='r'){ rollRandom(); }
+      if(e.key.toLowerCase()==='s'){ current && togglePause(); }
+    });
+
+    /* ===================== Clipboard & Share ===================== */
+    async function copyVerse(){
+      try{
+        await navigator.clipboard.writeText(`${byRef(current)} — ${current.text}`);
+        flash('Copied!');
+      }catch{ flash('Copy failed'); }
+    }
+    async function shareVerse(){
+      const text = `${byRef(current)} — ${current.text}`;
+      const url = location.href;
+      if(navigator.share){
+        try{ await navigator.share({title:'Daily Scripture', text, url}); }
+        catch{}
+      }else{
+        try{
+          await navigator.clipboard.writeText(text + '\n' + url);
+          flash('Link copied!');
+        }catch{ flash('Share failed'); }
+      }
+    }
+    function flash(msg){
+      const b = document.createElement('div');
+      b.textContent = msg;
+      Object.assign(b.style,{position:'fixed',left:'50%',top:'14px',transform:'translateX(-50%)',background:'#2b2118',color:'#fff',padding:'8px 12px',borderRadius:'10px',boxShadow:'0 6px 16px rgba(0,0,0,.25)',zIndex:9999,opacity:'0',transition:'opacity .18s ease'});
+      document.body.appendChild(b);
+      requestAnimationFrame(()=>{ b.style.opacity='1'; });
+      setTimeout(()=>{ b.style.opacity='0'; setTimeout(()=>b.remove(),180); }, 1200);
+    }
+
+    /* ===================== Init & bindings ===================== */
+    const saved=localStorage.getItem('autoSpeak'); if(saved!==null)$('#autoSpeak').checked=saved==='1';
+    $('#autoSpeak').addEventListener('change',()=>localStorage.setItem('autoSpeak',$('#autoSpeak').checked?'1':'0'));
+
+    ensureVoices();
+    if(!loadFromURL()) rollRandom();
+
+    $('#againBtn').addEventListener('click',rollRandom);
+    $('#speakBtn').addEventListener('click',togglePause);
+    $('#copyBtn').addEventListener('click',copyVerse);
+    $('#shareBtn').addEventListener('click',shareVerse);
+    $('#toggleExplainBtn').addEventListener('click',()=>{
+      const open = $('#explainBox').hidden;
+      setExplain(open);
+    });
+
+    // Keep deep link in sync if user navigates back/forward
+    window.addEventListener('hashchange', ()=>{ loadFromURL(); });
+
+    // Close results when clicking outside
+    document.addEventListener('click', (e)=>{
+      if(!results.contains(e.target) && e.target!==q) clearResults();
+    }, {passive:true});
+  </script>
 </body>
 </html>
