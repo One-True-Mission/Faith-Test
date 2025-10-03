@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&display=swap');
+
 /* ---------- styles.css ---------- */
 /* Theme tokens */
 :root{
@@ -21,12 +23,22 @@
   --maxw: 900px;
 }
 
-/* Fixed background (always centered) */
+/* Fixed background (image element so iOS won't "swim") */
 .bg{
-  position: fixed; inset: 0;
-  background: url('../assets/bg.jpg') center / cover no-repeat fixed;
-  filter: brightness(var(--bg-brightness));
+  position: fixed;
+  inset: 0;
   z-index: -2;
+  overflow: hidden;
+}
+.bg-img{
+  position: fixed;           /* anchors to the viewport */
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(var(--bg-brightness));
+  transform: translateZ(0);  /* prevents raster shifts on iOS */
 }
 /* faint overlay for readability */
 .shade{
@@ -69,13 +81,56 @@
   z-index: 20;
 }
 .sidemenu.open{ translate: 0 0; }
-.menu-inner{ height: 100%; display: grid; grid-template-rows: auto 1fr auto; gap: 16px; padding: 18px; }
-.sidemenu .close{ justify-self: end; border: 0; background: transparent; font-size: 28px; color: var(--head); }
-.sidemenu .btn.shop{ background: #c2462d; color: #fff; }
-.sidemenu .links{ display: grid; gap: 10px; }
-.sidemenu .link{ padding: 10px 12px; border-radius: 10px; background: #f2e7d4; color: var(--ink); text-decoration: none; }
+.menu-inner{
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;  /* close + 2 buttons + links + settings */
+  gap: 14px;
+  padding: 18px;
+}
+.sidemenu .close{
+  justify-self: end; border: 0; background: transparent; font-size: 28px; color: var(--head);
+}
+
+/* Buttons inside menu: full width, theme colors */
+.sidemenu .btn{
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: #f2e7d4;
+  color: #5a4336;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+
+/* Support button — slightly distinct but not loud */
+.sidemenu .btn.shop{
+  background: linear-gradient(#f3dfc9, #ead2b8);
+  border: 1px solid #e0c7a8;
+  font-weight: 600;
+}
+
+/* Placeholder button style */
+.sidemenu .btn.alt{
+  background: #efe4d4;
+  border: 1px solid #e7d6c2;
+}
+
+/* Default link entries */
+.sidemenu .links{ display: grid; gap: 10px; margin-top: 4px; }
+.sidemenu .link{
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f7efe4;
+  color: var(--ink);
+  text-decoration: none;
+}
+
 .settings{ border-top: 1px solid rgba(0,0,0,.06); padding-top: 12px; }
-.settings label{ display:block; font-weight:600; margin-bottom: 6px; color: var(--head); }
+.settings label{ display:block; font-weight:700; margin-bottom: 6px; color: var(--head); }
 .settings input[type="range"]{ width: 100%; }
 .backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 15; }
 
@@ -90,6 +145,7 @@
   padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,.08);
   background: var(--tint); color: var(--ink);
 }
+
 .card{
   background: var(--card);
   color: var(--ink);
@@ -114,8 +170,17 @@
   padding: 14px 16px;
 }
 
-.verse{ font-size: clamp(18px, 2.8vw, 22px); line-height: 1.5; }
-.meaning{ font-size: clamp(16px, 2.6vw, 20px); line-height: 1.6; color: #2b2118; }
+.verse{
+  font-family: "EB Garamond", serif;
+  font-size: clamp(18px, 2.8vw, 22px);
+  line-height: 1.5;
+}
+.meaning{
+  font-family: "EB Garamond", serif;
+  font-size: clamp(16px, 2.6vw, 20px);
+  line-height: 1.6;
+  color: #2b2118;
+}
 
 .actions{ display:flex; gap:10px; margin-top: 10px; flex-wrap: wrap; }
 
