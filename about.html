@@ -12,7 +12,10 @@
   <script defer src="js/app.js"></script>
 </head>
 <body class="about-page">
-  <div class="bg" role="presentation" aria-hidden="true"></div>
+  <!-- Fixed background (image element prevents iOS 'swim') -->
+  <div class="bg" role="presentation" aria-hidden="true">
+    <img class="bg-img" src="assets/bg.jpg" alt="" loading="eager">
+  </div>
   <div class="shade"></div>
 
   <header class="topbar">
@@ -23,10 +26,19 @@
   <aside id="sidemenu" class="sidemenu" aria-hidden="true">
     <div class="menu-inner">
       <button class="close" aria-label="Close menu">×</button>
-      <a class="shop btn" href="https://1x2f63-7u.myshopify.com" target="_blank" rel="noopener">One True Mission | Click-to-Support</a>
+
+      <a class="btn shop" href="https://1x2f63-7u.myshopify.com" target="_blank" rel="noopener">
+        One True Mission | Click-to-Support
+      </a>
+
+      <a class="btn alt" href="#" aria-disabled="true">
+        Find a Local Church
+      </a>
+
       <nav class="links">
         <a href="index.html" class="link">Home</a>
       </nav>
+
       <div class="settings">
         <label for="brightness">Brightness</label>
         <input id="brightness" type="range" min="50" max="115" value="85">
