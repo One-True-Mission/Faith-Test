@@ -180,3 +180,4 @@ window.addEventListener('DOMContentLoaded', ()=>{
   initScripture();
   initYear();
 });
+
