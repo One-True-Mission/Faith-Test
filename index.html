@@ -26,7 +26,7 @@
   <aside id="sidemenu" class="sidemenu" aria-hidden="true">
     <div class="menu-inner">
       <button class="close" aria-label="Close menu">×</button>
-      <a class="shop btn" href="https://1x2f63-7u.myshopify.com" target="_blank" rel="noopener">One True Mission | Click‑to‑Support</a>
+      <a class="shop btn" href="https://1x2f63-7u.myshopify.com" target="_blank" rel="noopener">One True Mission | Click-to-Support</a>
       <nav class="links">
         <a href="about.html" class="link">About</a>
       </nav>
@@ -41,6 +41,9 @@
 
   <!-- Main content -->
   <main class="wrap">
+    <!-- Spacer so the cross is fully visible before content -->
+    <div class="hero-gap" aria-hidden="true"></div>
+
     <form id="searchForm" class="search">
       <input id="q" name="q" type="search" placeholder="Search: 'John 3:16' or words like ‘shepherd peace’…" autocomplete="off" />
       <button class="btn" type="submit">Search</button>
@@ -48,7 +51,8 @@
 
     <section class="card verse-card" aria-live="polite">
       <h2 id="ref" class="ref">Loading…</h2>
-      <p id="verse" class="verse"></p>
+      <!-- Yellow inner panel for scripture text -->
+      <p id="verse" class="verse panel"></p>
       <div class="actions">
         <button id="another" class="btn ghost">Another</button>
         <button id="copy" class="btn">Copy</button>
@@ -60,13 +64,8 @@
       <h3>What this means</h3>
       <p id="meaning" class="meaning"></p>
     </section>
-
-    <p class="footnote">Plain‑English paraphrases, not a specific translation. Add more in <code>data/scriptures.json</code>.</p>
   </main>
 
-  <footer class="footer">
-    <span>crowned-by-thorns.github.io</span>
-    <span id="year"></span>
-  </footer>
+  <footer class="footer">One True Mission</footer>
 </body>
 </html>
