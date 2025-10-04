@@ -210,3 +210,38 @@
 
 /* Accessibility focus */
 :focus-visible{ outline: 2px solid var(--head); outline-offset: 2px; }
+/* Side menu cleanup */
+.sidemenu .menu-inner {
+  padding: 20px;
+}
+
+.menu-btn {
+  display: block;
+  padding: 14px 18px;
+  margin: 8px 0;
+  border-radius: var(--radius);
+  text-align: center;
+  font-weight: 500;
+  background: rgba(255,255,255,0.85);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  transition: background 0.2s ease;
+}
+
+.menu-btn:hover {
+  background: rgba(255,255,255,1);
+}
+
+/* Shop button stands out */
+.menu-btn-shop {
+  background: var(--parch2);
+  font-weight: 600;
+  border: 2px solid var(--head);
+}
+
+/* Divider lines */
+.menu-divider {
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.15);
+  margin: 6px 0;
+}
