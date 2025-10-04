@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=EB+Garamond:wght@400;600;700&display=swap');
 
 /* ---------- styles.css ---------- */
 :root {
@@ -17,13 +17,22 @@
   --btn-ghost: #f7efe4;
   --btn-ink: #3b2a23;
 
-  --menu-btn: #fff4dd;    /* menu button bg */
-  --menu-btn-border: #e3c67a; /* darker gold border */
+  --menu-btn: #fff4dd;           /* menu button bg */
+  --menu-btn-border: #e3c67a;    /* darker gold border */
 
   --parch2: #ffefb8;      /* shop btn bg */
   --shadow: 0 16px 40px rgba(0,0,0,.20);
   --radius: 16px;
   --maxw: 900px;
+
+  /* Menu palette (90% opaque warm yellow) */
+  --menu-bg: rgba(255, 231, 186, 0.9);
+  --menu-card: #fff1cc;
+  --menu-card-hover: #ffe6a8;
+  --menu-ink: #2b2118;
+  --menu-border: #c79a39;
+  --menu-border-hover: #b57f25;
+  --menu-shadow: 0 12px 30px rgba(0,0,0,.12);
 }
 
 /* ---------- Background ---------- */
@@ -71,38 +80,40 @@
 }
 .hamburger:focus { outline: 2px solid var(--head); outline-offset: 2px; }
 
-/* ---------- Side Menu ---------- */
-/* 90% opaque parchment drawer */
+/* ---------- Side Menu (Drawer) ---------- */
+/* Warm yellow, ~10% transparent; consistent Safari + Chrome */
 .sidemenu {
   position: fixed; inset: 0 0 0 auto;
   width: min(420px, 86vw);
-  background: linear-gradient(180deg, #fff7e6 0%, #ffebc0 100%);
+  /* Use a single solid color with alpha for browser consistency */
+  background: var(--menu-bg);
   translate: 100% 0;
   transition: translate .25s ease;
   box-shadow: -8px 0 30px rgba(0,0,0,.2);
   z-index: 20;
   border-left: 1px solid rgba(0,0,0,0.05);
   overflow: hidden;
+
+  /* Ensure no weird blending/filters interfere */
+  opacity: 1;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  mix-blend-mode: normal;
+  isolation: isolate;
 }
+/* Open state */
 .sidemenu.open { translate: 0 0; }
 
-/* Faint cross watermark (CSS-drawn = no image edges) */
-.sidemenu::after{
-  content:"";
-  position:absolute; inset:0;
-  /* the color of the cross (lighten effect) */
-  background: rgba(255,255,255,.22);
-  /* create a cross shape by masking two rectangles */
-  -webkit-mask:
-    linear-gradient(#000 0 0) center / 16% 62% no-repeat,
-    linear-gradient(#000 0 0) center / 62% 16% no-repeat;
-          mask:
-    linear-gradient(#000 0 0) center / 16% 62% no-repeat,
-    linear-gradient(#000 0 0) center / 62% 16% no-repeat;
-  pointer-events: none;
+/* REMOVE the watermark/cross overlay entirely (was causing Safari issues) */
+.sidemenu::before,
+.sidemenu::after {
+  content: none !important;
+  background: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
 }
 
-/* Menu inner container (keeps content above watermark) */
+/* Menu inner container */
 .menu-inner{
   display: flex; flex-direction: column; gap: 10px;
   padding: 20px;
@@ -125,7 +136,7 @@
   text-decoration: none;
   border: 2px solid var(--menu-btn-border); /* darker gold border */
   box-shadow: 0 6px 16px rgba(0,0,0,.08);
-  transition: background .25s ease, transform .2s ease, border-color .25s ease;
+  transition: background .25s ease, transform .2s ease, border-color .25s ease, box-shadow .12s ease;
   box-sizing: border-box;
 }
 .menu-btn:hover { background: #fffdf3; transform: translateY(-1px); }
@@ -141,7 +152,6 @@
 .menu-btn.placeholder{
   pointer-events: none;
   cursor: not-allowed;
-  /* keep full opacity so it matches About visually */
 }
 
 /* Single divider between shop and the cluster below */
@@ -242,36 +252,23 @@
 /* ---------- Focus ---------- */
 :focus-visible{ outline: 2px solid var(--head); outline-offset: 2px; }
 
-/* === Menu: warm yellow, 10% transparency, consistent on Safari + Chrome === */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&display=swap');
-
-:root{
-  --menu-bg: rgba(255, 231, 186, 0.9);   /* warm yellow w/10% transparency */
-  --menu-card: #fff1cc;                  /* button fill */
-  --menu-card-hover: #ffe6a8;            /* darker yellow on hover */
-  --menu-ink: #2b2118;                   /* dark text color */
-  --menu-border: #c79a39;                /* golden border */
-  --menu-border-hover: #b57f25;          /* slightly darker border on hover */
-  --menu-shadow: 0 12px 30px rgba(0,0,0,.12);
-}
-
-/* Side menu container */
+/* ---------- Side Menu (ID-specific styles for links/buttons) ---------- */
 #sidemenu{
-  background: var(--menu-bg);
+  background: var(--menu-bg);                 /* ensure ID also has the color */
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   box-shadow: var(--menu-shadow);
   color: var(--menu-ink);
 }
 
-/* Remove any lingering image or overlay */
+/* Remove any lingering image/overlay on the ID too */
 #sidemenu, #sidemenu::before, #sidemenu::after,
 #sidemenu .menu-inner, #sidemenu .menu-inner::before, #sidemenu .menu-inner::after {
   background-image: none !important;
   content: none !important;
 }
 
-/* Menu heading */
+/* Menu heading inside the drawer (if used) */
 #sidemenu .menu-title,
 #sidemenu h1, #sidemenu h2, #sidemenu h3{
   font-family: "Cinzel", Georgia, "Times New Roman", serif;
@@ -281,7 +278,7 @@
   text-rendering: optimizeLegibility;
 }
 
-/* Buttons */
+/* Buttons inside the drawer (strong, outlined) */
 #sidemenu a,
 #sidemenu button,
 #sidemenu .menu-btn,
@@ -309,14 +306,14 @@
     box-shadow .12s ease;
 }
 
-/* Highlight the first button slightly stronger */
+/* Top/first button a touch stronger */
 #sidemenu .menu-inner > a:first-of-type {
   background: #ffe6a8;
   border-color: #b57f25;
   box-shadow: 0 8px 20px rgba(0,0,0,.16), inset 0 0 0 1px rgba(255,255,255,.35);
 }
 
-/* Hover and tap feedback */
+/* Hover / tap */
 #sidemenu a:hover, 
 #sidemenu button:hover,
 #sidemenu .menu-btn:hover,
@@ -326,7 +323,6 @@
   transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(0,0,0,.14);
 }
-
 #sidemenu a:active, 
 #sidemenu button:active,
 #sidemenu .menu-btn:active,
@@ -335,7 +331,7 @@
   box-shadow: 0 6px 18px rgba(0,0,0,.10);
 }
 
-/* Divider line */
+/* Divider line inside the drawer (if you use <hr>) */
 #sidemenu hr{
   border: 0;
   height: 1px;
@@ -343,7 +339,7 @@
   background: linear-gradient(90deg, transparent, rgba(0,0,0,.15), transparent);
 }
 
-/* Disable any old overlay shade */
+/* Ensure no old overlay shades appear */
 #sidemenu .shade, #sidemenu .overlay{
   display: none !important;
   opacity: 0 !important;
