@@ -369,3 +369,42 @@
 
 /* Hide the menu close button globally */
 .sidemenu .close { display: none !important; }
+/* === Cross-browser drawer fixes (Chrome/Edge/Safari mobile) === */
+
+/* Use transform instead of the newer `translate` prop, and hard-clip paint */
+.sidemenu {
+  transform: translateX(100%);     /* replaces: translate: 100% 0; */
+  overflow-x: hidden;              /* belt & suspenders */
+  clip-path: inset(0 round 0);     /* clip any child shadows perfectly */
+  contain: paint;                  /* isolate painting to the drawer box */
+  will-change: transform;          /* smooth open/close */
+}
+
+.sidemenu.open {
+  transform: translateX(0);        /* replaces: translate: 0 0; */
+}
+
+/* Inner container: never allow horizontal scroll width */
+.sidemenu .menu-inner {
+  padding-inline: 16px;            /* a touch narrower on both sides */
+  overflow-x: hidden;
+}
+
+/* Buttons/links: keep strictly inside and remove side margins */
+#sidemenu a,
+#sidemenu button,
+#sidemenu .menu-btn,
+#sidemenu .btn {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;                /* no left/right margins */
+  box-sizing: border-box;
+  overflow-wrap: anywhere;         /* long words won’t widen the box */
+  word-break: break-word;
+  box-shadow: 0 6px 16px rgba(0,0,0,.10); /* modest shadow to avoid edge peeks */
+}
+
+/* Optional: if you still see a 1px sliver on some devices, tighten shadow more */
+/*
+#sidemenu a, #sidemenu .btn { box-shadow: 0 4px 12px rgba(0,0,0,.10); }
+*/
