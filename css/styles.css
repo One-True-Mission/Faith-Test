@@ -1,149 +1,212 @@
-/* ---------- Theme Tokens ---------- */
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&display=swap');
+
+/* ---------- styles.css ---------- */
+/* Theme tokens */
 :root{
-  --bg-brightness: 0.85;         /* adjusted by slider (0.5–1.1) */
-  --shade: rgba(0,0,0,.28);
-  --ink: #2b2118;                /* main text */
-  --muted: #5d4a37;              /* muted text */
-  --parchment: #f5e9d4;          /* base background */
-  --accent: #a86b3d;             /* primary button / headers */
-  --accent-ink: #ffffff;
-  --secondary: #3b2f22;
-  --secondary-ink: #ffffff;
+  --bg-brightness: 0.85;                 /* 0.50–1.15 via slider */
+  --tint: rgba(255,255,255,.86);         /* card background */
+  --tint-weak: rgba(255,255,255,.65);
+  --ink: #2b2118;
+  --muted: #6b5550;
 
-  --pad: 18px;
-  --maxw: 1000px;
-  --radius: 14px;
-  --shadow: 0 10px 30px rgba(0,0,0,.18);
+  --head: #7e4c2a;                       /* header color everywhere */
+  --brand: #a86b3d;
+
+  --card: color-mix(in oklab, var(--tint) 90%, white 10%);
+  --panel: #ffe7b3;                      /* soft yellow inner panel */
+  --btn: #eed3b1;                        /* warm button background */
+  --btn-ghost: #f7efe4;
+  --btn-ink: #3b2a23;
+
+  --shadow: 0 16px 40px rgba(0,0,0,.20);
+  --radius: 16px;
+  --maxw: 900px;
 }
 
-/* ---------- Base ---------- */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-body{
-  margin: 0;
-  font-family: "EB Garamond", Garamond, Georgia, serif;
-  color: var(--ink);
-  background: var(--parchment);
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* Locked background approach (iOS-friendly) */
+/* Fixed background (image element so iOS won't "swim") */
 .bg{
   position: fixed;
   inset: 0;
-  background: url("../assets/faith-bg.jpg") center / cover no-repeat;
-  filter: brightness(var(--bg-brightness));
-  transform: translateZ(0); /* raster hint for iOS */
-  will-change: transform;
   z-index: -2;
+  overflow: hidden;
 }
-.shade{
-  position: fixed;
+.bg-img{
+  position: fixed;           /* anchors to the viewport */
   inset: 0;
-  background: var(--shade);
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(var(--bg-brightness));
+  transform: translateZ(0);  /* prevents raster shifts on iOS */
+}
+/* faint overlay for readability */
+.shade{
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,.22), rgba(255,255,255,.10) 60%);
   z-index: -1;
 }
 
-/* ---------- Top Bar ---------- */
+/* Topbar */
 .topbar{
-  position: fixed; inset: 0 0 auto 0;
-  height: 64px;
-  padding: 0 var(--pad);
-  background: rgba(255,255,255,0.82);
-  backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: space-between;
-  box-shadow: var(--shadow);
-  z-index: 100;
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  background: color-mix(in oklab, var(--tint) 80%, transparent);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  border-bottom: 1px solid rgba(0,0,0,.05);
 }
 .brand{
-  display: flex; align-items: center; gap: 8px;
-  font-weight: 700; font-size: 1.15rem;
+  margin: 0;
+  font-size: clamp(22px, 4vw, 32px);
+  line-height: 1.1;
+  letter-spacing: .02em;
+  color: var(--brand);
+  text-shadow: 0 1px 0 rgba(255,255,255,.8);
 }
-.star{ color: var(--accent); font-size: 1.4rem; }
 .hamburger{
-  appearance: none; border: 0; background: transparent;
-  font-size: 1.6rem; line-height: 1; cursor: pointer; color: var(--secondary);
+  font-size: 22px; background: transparent; border: 0; padding: 6px 10px; border-radius: 8px;
+  color: var(--head);
 }
+.hamburger:focus{ outline: 2px solid var(--head); outline-offset: 2px; }
 
-/* ---------- Off-Canvas Menu ---------- */
+/* Off-canvas menu */
 .sidemenu{
-  position: fixed; top: 0; bottom: 0; right: -290px; width: 280px;
-  background: rgba(255,255,255,0.96);
-  box-shadow: -6px 0 24px rgba(0,0,0,.2);
+  position: fixed; inset: 0 0 0 auto;
+  width: min(420px, 86vw);
+  background: var(--tint);
+  translate: 100% 0;
+  transition: translate .25s ease;
+  box-shadow: -8px 0 30px rgba(0,0,0,.2);
+  z-index: 20;
+}
+.sidemenu.open{ translate: 0 0; }
+.menu-inner{
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;  /* close + 2 buttons + links + settings */
+  gap: 14px;
   padding: 18px;
-  transition: right .28s ease;
-  z-index: 120;
 }
-.sidemenu.open{ right: 0; }
-.menu-inner{ display: flex; flex-direction: column; gap: 10px; }
-.menu-btn{
-  display: block; text-decoration: none; text-align: center;
-  color: var(--secondary); background: rgba(255,255,255,0.9);
-  padding: 10px 14px; border-radius: 12px; font-weight: 600;
-  border: 1px solid rgba(0,0,0,.1);
+.sidemenu .close{
+  justify-self: end; border: 0; background: transparent; font-size: 28px; color: var(--head);
 }
-.menu-btn.primary{ background: var(--accent); color: var(--accent-ink); }
-hr{ border: none; border-top: 1px solid rgba(0,0,0,.14); margin: 4px 0; }
-.menu-section{ margin-top: 10px; }
-.menu-label{ display:block; font-family: Inter, system-ui, sans-serif; font-size: .9rem; margin-bottom: 6px; }
-#brightness{ width: 100%; }
 
-/* ---------- Content ---------- */
-.hero-space{ height: 64px; }
-.content{
-  padding: 24px;
-  max-width: var(--maxw);
-  margin: 0 auto;
+/* Buttons inside menu: full width, theme colors */
+.sidemenu .btn{
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: #f2e7d4;
+  color: #5a4336;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
 }
-.text-bubble{
-  background: rgba(255,255,255,0.62);
+
+/* Support button — slightly distinct but not loud */
+.sidemenu .btn.shop{
+  background: linear-gradient(#f3dfc9, #ead2b8);
+  border: 1px solid #e0c7a8;
+  font-weight: 600;
+}
+
+/* Placeholder button style */
+.sidemenu .btn.alt{
+  background: #efe4d4;
+  border: 1px solid #e7d6c2;
+}
+
+/* Default link entries */
+.sidemenu .links{ display: grid; gap: 10px; margin-top: 4px; }
+.sidemenu .link{
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f7efe4;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.settings{ border-top: 1px solid rgba(0,0,0,.06); padding-top: 12px; }
+.settings label{ display:block; font-weight:700; margin-bottom: 6px; color: var(--head); }
+.settings input[type="range"]{ width: 100%; }
+.backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 15; }
+
+/* Layout */
+.wrap{ width: min(var(--maxw), 92vw); margin-inline: auto; padding: 22px 0 80px; }
+/* spacer to show the cross first */
+.hero-gap{ height: 34vh; }
+@media (min-width: 720px){ .hero-gap{ height: 38vh; } }
+
+.search{ display: grid; grid-template-columns: 1fr auto; gap: 10px; margin: 10px 0 18px; }
+.search input{
+  padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,.08);
+  background: var(--tint); color: var(--ink);
+}
+
+.card{
+  background: var(--card);
+  color: var(--ink);
   border-radius: var(--radius);
-  padding: 18px;
-  margin-bottom: 18px;
   box-shadow: var(--shadow);
+  padding: clamp(14px, 2.4vw, 22px);
+  margin: 14px 0;
 }
-.text-bubble h1,.text-bubble h2{
-  margin: 0 0 10px 0; color: var(--accent);
+/* Headers: same style/color across all cards */
+.card h2, .card h3, .ref{
+  margin: 0 0 8px;
+  font-size: clamp(18px, 3.3vw, 24px);
+  color: var(--head);
+  font-weight: 700;
 }
-.intro p{ margin: 0 0 10px 0; }
 
-/* Verse of the Day */
-.votd{ display: grid; gap: 10px; }
-.votd-text{ font-size: 1.15rem; line-height: 1.55; }
-.votd-ref{ font-weight: 600; color: var(--secondary); }
-.votd-actions{ display: flex; gap: 8px; flex-wrap: wrap; }
-
-/* Search */
-.search-row{ display: flex; gap: 10px; align-items: center; }
-.search{
-  flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,.12);
-  background: rgba(255,255,255,.9); font-family: Inter, system-ui, sans-serif;
+/* Yellow inner panel just for the verse text */
+.panel{
+  background: var(--panel);
+  border: 1px solid rgba(0,0,0,.04);
+  border-radius: 14px;
+  padding: 14px 16px;
 }
-.results{ list-style: none; padding: 0; margin: 12px 0 0 0; display: grid; gap: 10px; }
-.result{
-  background: rgba(255,255,255,.9); border: 1px solid rgba(0,0,0,.08);
-  border-radius: 12px; padding: 12px;
-}
-.result-ref{ margin: 0 0 6px 0; color: var(--secondary); font-weight: 700; }
-.result-text{ margin: 0; }
 
-/* Buttons */
+.verse{
+  font-family: "EB Garamond", serif;
+  font-size: clamp(18px, 2.8vw, 22px);
+  line-height: 1.5;
+}
+.meaning{
+  font-family: "EB Garamond", serif;
+  font-size: clamp(16px, 2.6vw, 20px);
+  line-height: 1.6;
+  color: #2b2118;
+}
+
+.actions{ display:flex; gap:10px; margin-top: 10px; flex-wrap: wrap; }
+
+/* Warm button colors (no blue) */
 .btn{
-  display: inline-block; text-decoration: none; cursor: pointer;
-  padding: 11px 18px; border-radius: 12px; font-weight: 700;
-  background: var(--accent); color: var(--accent-ink); border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: var(--btn);
+  color: var(--btn-ink);
+  cursor: pointer;
 }
-.btn.secondary{ background: #2d241a; color: #fff; }
+.btn:hover{ filter: brightness(0.98); }
+.btn:active{ filter: brightness(0.95); }
+.btn.ghost{ background: var(--btn-ghost); }
 
-.cta{ text-align: center; margin: 22px 0 10px; }
-
-footer{
-  text-align: center; color: var(--muted); font-family: Inter, system-ui, sans-serif;
-  font-size: 0.92rem; padding: 30px 0;
+/* Footer */
+.footer{
+  position: sticky; bottom: 0;
+  display: flex; justify-content: center; align-items: center;
+  padding: 12px 16px;
+  color: #6b5550;
+  font-size: 14px;
+  background: color-mix(in oklab, var(--tint-weak) 70%, transparent);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
 }
 
-/* Small tweaks */
-@media (min-width: 720px){
-  .votd-text{ font-size: 1.2rem; }
-}
+/* Accessibility focus */
+:focus-visible{ outline: 2px solid var(--head); outline-offset: 2px; }
