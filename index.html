@@ -26,37 +26,30 @@
 
   <!-- Off-canvas menu -->
   <aside id="sidemenu" class="sidemenu" aria-hidden="true">
-  <div class="menu-inner">
+    <div class="menu-inner">
+      <!-- Buttons -->
+      <a href="https://1x2f63-7u.myshopify.com" class="menu-btn menu-btn-shop">
+        One True Mission | Click-to-Support
+      </a>
 
-    <!-- Shop Link (highlighted, but not too loud) -->
-    <a href="https://1x2f63-7u.myshopify.com" class="menu-btn menu-btn-shop">
-      One True Mission | Click-to-Support
-    </a>
+      <hr class="menu-divider">
 
-    <!-- Divider -->
-    <hr class="menu-divider">
-
-    <!-- Regular Menu Buttons -->
-    <a href="find-local-help.html" class="menu-btn">Find a Local Church</a>
-    <hr class="menu-divider">
-
-    <a href="about.html" class="menu-btn">About</a>
-
-  </div>
-</aside>
-
-      <a class="btn alt" href="#" aria-disabled="true">
+      <a href="find-local-help.html" class="menu-btn">
         Find a Local Church
       </a>
 
-      <nav class="links">
-        <a href="about.html" class="link">About</a>
-      </nav>
+      <hr class="menu-divider">
+
+      <a href="about.html" class="menu-btn">
+        About
+      </a>
+
+      <!-- Spacer handled by grid; settings sit at the bottom -->
+      <div></div>
 
       <div class="settings">
-        <label for="brightness">Brightness</label>
+        <label for="brightness">Background Brightness</label>
         <input id="brightness" type="range" min="50" max="115" value="85">
-        <small>Adjust page brightness</small>
       </div>
     </div>
   </aside>
@@ -77,9 +70,9 @@
       <!-- Yellow inner panel for scripture text -->
       <p id="verse" class="verse panel"></p>
       <div class="actions">
-        <button id="another" class="btn ghost">Another</button>
-        <button id="copy" class="btn">Copy</button>
-        <button id="share" class="btn ghost">Share</button>
+        <button id="another" class="btn ghost" type="button">Another</button>
+        <button id="copy" class="btn" type="button">Copy</button>
+        <button id="share" class="btn ghost" type="button">Share</button>
       </div>
     </section>
 
