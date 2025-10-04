@@ -1,153 +1,199 @@
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&display=swap');
 
 /* ---------- styles.css ---------- */
-/* Theme tokens */
-:root{
-  --bg-brightness: 0.85;                 /* 0.50–1.15 via slider */
-  --tint: rgba(255,255,255,.86);         /* card background */
+:root {
+  --bg-brightness: 0.85;
+  --tint: rgba(255,255,255,.86);
   --tint-weak: rgba(255,255,255,.65);
   --ink: #2b2118;
   --muted: #6b5550;
-
-  --head: #7e4c2a;                       /* header color everywhere */
+  --head: #7e4c2a;
   --brand: #a86b3d;
-
   --card: color-mix(in oklab, var(--tint) 90%, white 10%);
-  --panel: #ffe7b3;                      /* soft yellow inner panel */
-  --btn: #eed3b1;                        /* warm button background */
+  --panel: #ffe7b3;
+  --btn: #eed3b1;
   --btn-ghost: #f7efe4;
   --btn-ink: #3b2a23;
-
-  --parch2: #ffefb8;                     /* used for shop button in menu */
+  --parch2: #ffefb8;
   --shadow: 0 16px 40px rgba(0,0,0,.20);
   --radius: 16px;
   --maxw: 900px;
 }
 
-/* Fixed background (image element so iOS won't "swim") */
-.bg{
+/* Fixed background */
+.bg {
   position: fixed;
   inset: 0;
   z-index: -2;
   overflow: hidden;
 }
-.bg-img{
-  position: fixed;           /* anchors to the viewport */
+.bg-img {
+  position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   object-fit: cover;
   object-position: center;
   filter: brightness(var(--bg-brightness));
-  transform: translateZ(0);  /* prevents raster shifts on iOS */
+  transform: translateZ(0);
 }
-/* faint overlay for readability */
-.shade{
+.shade {
   position: fixed; inset: 0;
   background: radial-gradient(ellipse at center, rgba(255,255,255,.22), rgba(255,255,255,.10) 60%);
   z-index: -1;
 }
 
 /* Topbar */
-.topbar{
+.topbar {
   position: sticky; top: 0; z-index: 10;
   display: flex; align-items: center; gap: 14px;
   padding: 14px 16px;
   background: color-mix(in oklab, var(--tint) 80%, transparent);
-  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   border-bottom: 1px solid rgba(0,0,0,.05);
 }
-.brand{
+.brand {
   margin: 0;
   font-size: clamp(22px, 4vw, 32px);
-  line-height: 1.1;
-  letter-spacing: .02em;
   color: var(--brand);
   text-shadow: 0 1px 0 rgba(255,255,255,.8);
 }
-.hamburger{
-  font-size: 22px; background: transparent; border: 0; padding: 6px 10px; border-radius: 8px;
+.hamburger {
+  font-size: 22px;
+  background: transparent;
+  border: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
   color: var(--head);
 }
-.hamburger:focus{ outline: 2px solid var(--head); outline-offset: 2px; }
+.hamburger:focus {
+  outline: 2px solid var(--head);
+  outline-offset: 2px;
+}
 
-/* Off-canvas menu (right drawer) */
-.sidemenu{
-  position: fixed; inset: 0 0 0 auto;
+/* --- Side Menu --- */
+.sidemenu {
+  position: fixed;
+  inset: 0 0 0 auto;
   width: min(420px, 86vw);
-  background: var(--tint);
+  background: linear-gradient(180deg, #fff7e6 0%, #ffebc0 100%);
   translate: 100% 0;
-  transition: translate .25s ease;
-  box-shadow: -8px 0 30px rgba(0,0,0,.2);
+  transition: translate 0.25s ease;
+  box-shadow: -8px 0 30px rgba(0,0,0,0.2);
   z-index: 20;
-}
-.sidemenu.open{ translate: 0 0; }
+  border-left: 1px solid rgba(0,0,0,0.05);
 
-.menu-inner{
-  height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto; /* buttons, spacer, settings */
-  gap: 14px;
-  padding: 18px;
+  /* subtle cross watermark */
+  background-image: 
+    linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0)),
+    url("../assets/cross-watermark.png");
+  background-size: 120px auto;
+  background-repeat: no-repeat;
+  background-position: center 80px;
+  background-blend-mode: lighten;
+}
+.sidemenu.open { translate: 0 0; }
+
+.menu-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
-/* New, clean menu button style */
+/* Buttons */
 .menu-btn {
   display: block;
   width: 100%;
   padding: 14px 18px;
-  margin: 8px 0;
+  margin: 6px 0;
   border-radius: var(--radius);
   text-align: center;
   font-weight: 500;
-  background: rgba(255,255,255,0.9);
+  background: #fff4dd;
   color: var(--ink);
   text-decoration: none;
-  box-shadow: var(--shadow);
-  transition: background 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  transition: background 0.25s ease, transform 0.2s ease;
+  box-sizing: border-box;
 }
-.menu-btn:hover { background: rgba(255,255,255,1); transform: translateY(-1px); }
+.menu-btn:hover {
+  background: #fffef7;
+  transform: translateY(-1px);
+}
 
-/* Shop button stands out (but not loud) */
+/* Shop button — distinct */
 .menu-btn-shop {
   background: var(--parch2);
   border: 2px solid var(--head);
   font-weight: 600;
 }
 
-/* Thin dividers between items */
+/* Divider only for shop separation */
 .menu-divider {
   border: none;
   border-top: 1px solid rgba(0,0,0,0.15);
-  margin: 6px 0;
+  margin: 8px 0;
 }
 
-/* Settings row (brightness slider) */
-.settings{
+/* Placeholder — not clickable */
+.menu-btn.placeholder {
+  opacity: 0.65;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Settings */
+.settings {
   border-top: 1px solid rgba(0,0,0,.10);
   padding-top: 12px;
 }
-.settings label{ display:block; font-weight:700; margin-bottom: 6px; color: var(--head); }
-.settings input[type="range"]{ width: 100%; }
+.settings label {
+  display:block;
+  font-weight:700;
+  margin-bottom: 6px;
+  color: var(--head);
+}
+.settings input[type="range"] {
+  width: 100%;
+}
 
-/* Backdrop for when menu is open (controlled in app.js) */
-.backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 15; }
+/* Backdrop */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.25);
+  z-index: 15;
+}
 
 /* Layout */
-.wrap{ width: min(var(--maxw), 92vw); margin-inline: auto; padding: 22px 0 80px; }
-/* spacer to show the cross first */
-.hero-gap{ height: 34vh; }
+.wrap {
+  width: min(var(--maxw), 92vw);
+  margin-inline: auto;
+  padding: 22px 0 80px;
+}
+.hero-gap { height: 34vh; }
 @media (min-width: 720px){ .hero-gap{ height: 38vh; } }
 
 /* Search */
-.search{ display: grid; grid-template-columns: 1fr auto; gap: 10px; margin: 10px 0 18px; }
-.search input{
-  padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,.08);
-  background: var(--tint); color: var(--ink);
+.search {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin: 10px 0 18px;
+}
+.search input {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: var(--tint);
+  color: var(--ink);
 }
 
 /* Cards */
-.card{
+.card {
   background: var(--card);
   color: var(--ink);
   border-radius: var(--radius);
@@ -155,38 +201,41 @@
   padding: clamp(14px, 2.4vw, 22px);
   margin: 14px 0;
 }
-/* Headers on cards */
-.card h2, .card h3, .ref{
+.card h2, .card h3, .ref {
   margin: 0 0 8px;
   font-size: clamp(18px, 3.3vw, 24px);
   color: var(--head);
   font-weight: 700;
 }
 
-/* Yellow inner panel just for the verse text */
-.panel{
+/* Verse */
+.panel {
   background: var(--panel);
   border: 1px solid rgba(0,0,0,.04);
   border-radius: 14px;
   padding: 14px 16px;
 }
-
-.verse{
+.verse {
   font-family: "EB Garamond", serif;
   font-size: clamp(18px, 2.8vw, 22px);
   line-height: 1.5;
 }
-.meaning{
+.meaning {
   font-family: "EB Garamond", serif;
   font-size: clamp(16px, 2.6vw, 20px);
   line-height: 1.6;
   color: #2b2118;
 }
 
-.actions{ display:flex; gap:10px; margin-top: 10px; flex-wrap: wrap; }
+.actions {
+  display:flex;
+  gap:10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
 
-/* Warm button colors (no blue) */
-.btn{
+/* Buttons (main page) */
+.btn {
   padding: 10px 14px;
   border-radius: 12px;
   border: 1px solid rgba(0,0,0,.08);
@@ -194,20 +243,23 @@
   color: var(--btn-ink);
   cursor: pointer;
 }
-.btn:hover{ filter: brightness(0.98); }
-.btn:active{ filter: brightness(0.95); }
-.btn.ghost{ background: var(--btn-ghost); }
+.btn:hover { filter: brightness(0.98); }
+.btn:active { filter: brightness(0.95); }
+.btn.ghost { background: var(--btn-ghost); }
 
 /* Footer */
-.footer{
+.footer {
   position: sticky; bottom: 0;
   display: flex; justify-content: center; align-items: center;
   padding: 12px 16px;
   color: #6b5550;
   font-size: 14px;
   background: color-mix(in oklab, var(--tint-weak) 70%, transparent);
-  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
 }
 
-/* Accessibility focus */
-:focus-visible{ outline: 2px solid var(--head); outline-offset: 2px; }
+/* Focus */
+:focus-visible {
+  outline: 2px solid var(--head);
+  outline-offset: 2px;
+}
