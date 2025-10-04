@@ -12,7 +12,7 @@
   <script defer src="js/app.js"></script>
 </head>
 <body>
-  <!-- Fixed background (image element prevents iOS 'swim') -->
+  <!-- Fixed background -->
   <div class="bg" role="presentation" aria-hidden="true">
     <img class="bg-img" src="assets/bg.jpg" alt="" loading="eager">
   </div>
@@ -27,25 +27,23 @@
   <!-- Off-canvas menu -->
   <aside id="sidemenu" class="sidemenu" aria-hidden="true">
     <div class="menu-inner">
-      <!-- Buttons -->
+
+      <!-- Shop link (highlighted and separated) -->
       <a href="https://1x2f63-7u.myshopify.com" class="menu-btn menu-btn-shop">
         One True Mission | Click-to-Support
       </a>
 
       <hr class="menu-divider">
 
-      <a href="find-local-help.html" class="menu-btn">
+      <!-- Placeholder (not clickable) -->
+      <a href="#" class="menu-btn placeholder" aria-disabled="true">
         Find a Local Church
       </a>
 
-      <hr class="menu-divider">
-
+      <!-- Regular page link -->
       <a href="about.html" class="menu-btn">
         About
       </a>
-
-      <!-- Spacer handled by grid; settings sit at the bottom -->
-      <div></div>
 
       <div class="settings">
         <label for="brightness">Background Brightness</label>
@@ -53,11 +51,11 @@
       </div>
     </div>
   </aside>
+
   <div class="backdrop" hidden></div>
 
   <!-- Main content -->
   <main class="wrap">
-    <!-- Spacer so the cross is fully visible first -->
     <div class="hero-gap" aria-hidden="true"></div>
 
     <form id="searchForm" class="search">
@@ -67,7 +65,6 @@
 
     <section class="card verse-card" aria-live="polite">
       <h2 id="ref" class="ref">Loading…</h2>
-      <!-- Yellow inner panel for scripture text -->
       <p id="verse" class="verse panel"></p>
       <div class="actions">
         <button id="another" class="btn ghost" type="button">Another</button>
