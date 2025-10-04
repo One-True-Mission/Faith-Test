@@ -1,57 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>About – One True Mission</title>
-
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="css/styles.css" />
+  <title>About This Mission</title>
+  <meta name="description" content="Why this site exists: to share Scripture daily and encourage believers." />
+  <meta name="color-scheme" content="light only">
+  <meta name="theme-color" content="#f5e9d4">
+  <link rel="preload" href="assets/bg.jpg" as="image">
+  <link rel="stylesheet" href="css/styles.css">
   <script defer src="js/app.js"></script>
 </head>
 <body class="about-page">
-  <div class="bg"></div>
+  <!-- Fixed background (image element prevents iOS 'swim') -->
+  <div class="bg" role="presentation" aria-hidden="true">
+    <img class="bg-img" src="assets/bg.jpg" alt="" loading="eager">
+  </div>
   <div class="shade"></div>
 
-  <header class="topbar theme-bar">
-    <button class="hamburger" aria-label="Open menu" aria-controls="sidemenu" aria-expanded="false">☰</button>
-    <div class="brand">
-      <span class="star">✝</span>
-      <span class="brand-text">Faith &amp; Hope</span>
-    </div>
+  <header class="topbar">
+    <button class="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
+    <h1 class="brand">Daily Scripture</h1>
   </header>
 
   <aside id="sidemenu" class="sidemenu" aria-hidden="true">
     <div class="menu-inner">
-      <a href="https://1x2f63-7u.myshopify.com" class="menu-btn primary">Click Here to Support</a>
-      <hr>
-      <a href="index.html" class="menu-btn">Home</a>
-      <hr>
-      <a href="about.html" class="menu-btn">About</a>
-      <hr>
-      <a href="resources.html" class="menu-btn">Resources</a>
-      <div class="menu-section">
-        <label for="brightness" class="menu-label">Background Brightness</label>
-        <input type="range" id="brightness" min="50" max="110" step="1" value="85" />
+      <button class="close" aria-label="Close menu">×</button>
+
+      <a class="btn shop" href="https://1x2f63-7u.myshopify.com" target="_blank" rel="noopener">
+        One True Mission | Click-to-Support
+      </a>
+
+      <a class="btn alt" href="#" aria-disabled="true">
+        Find a Local Church
+      </a>
+
+      <nav class="links">
+        <a href="index.html" class="link">Home</a>
+      </nav>
+
+      <div class="settings">
+        <label for="brightness">Brightness</label>
+        <input id="brightness" type="range" min="50" max="115" value="85">
+        <small>Adjust page brightness</small>
       </div>
     </div>
   </aside>
+  <div class="backdrop" hidden></div>
 
-  <div class="hero-space"></div>
+  <main class="wrap">
+    <div class="hero-gap" aria-hidden="true"></div>
 
-  <main class="content">
-    <section class="text-bubble">
-      <h1>About One True Mission</h1>
-      <p>One True Mission was created to spread light, love, and hope through simple acts of faith. Every message and design you see here carries meaning—born from prayer, perseverance, and purpose.</p>
-      <p>We’re not a church or an institution. We’re a movement of people who believe faith can heal, restore, and inspire. Our goal is to create products and spaces that remind you to keep believing, keep going, and keep trusting that God’s plan is bigger than any obstacle.</p>
-      <p>As we grow, we plan to expand into outreach—supporting those facing addiction, suicide, and loneliness—because faith isn’t meant to stay inside four walls. It’s meant to reach hearts everywhere.</p>
+    <section class="card meaning-card">
+      <h2>About This Mission</h2>
+      <p>
+        This site exists to share the Word of God in simple, everyday language. Our hope is that
+        followers of Jesus—and those who are curious—will find encouragement, clarity, and next steps
+        for growing in faith. Each time you visit you’ll see a new passage and a short, plain-English
+        explanation. Read, reflect, and share with someone who could use some hope today.
+      </p>
+      <p>
+        We keep things focused and distraction-free: scripture first, meaning second. If a verse
+        speaks to you, take a moment to pray about it, memorize it, or pass it along.
+      </p>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; <span id="year"></span> One True Mission. All rights reserved.</p>
-  </footer>
+  <footer class="footer">One True Mission</footer>
 </body>
 </html>
