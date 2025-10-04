@@ -242,56 +242,47 @@
 /* ---------- Focus ---------- */
 :focus-visible{ outline: 2px solid var(--head); outline-offset: 2px; }
 
-/* === Menu – cross-browser consistent (Safari + Chrome) === */
-
-/* 1) Font just for the menu */
+/* === Menu: warm yellow, 10% transparency, consistent on Safari + Chrome === */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&display=swap');
 
-/* 2) Theme tokens for the menu */
 :root{
-  --menu-bg: #ffe7ba;          /* solid warm parchment */
-  --menu-card: #fff1cc;        /* button fill */
-  --menu-ink: #2b2118;         /* dark ink */
-  --menu-border: #c79a39;      /* darker golden outline */
+  --menu-bg: rgba(255, 231, 186, 0.9);   /* warm yellow w/10% transparency */
+  --menu-card: #fff1cc;                  /* button fill */
+  --menu-card-hover: #ffe6a8;            /* darker yellow on hover */
+  --menu-ink: #2b2118;                   /* dark text color */
+  --menu-border: #c79a39;                /* golden border */
+  --menu-border-hover: #b57f25;          /* slightly darker border on hover */
   --menu-shadow: 0 12px 30px rgba(0,0,0,.12);
 }
 
-/* 3) Side menu panel */
+/* Side menu container */
 #sidemenu{
-  /* remove any translucent/blur backgrounds (fixes Safari differences) */
-  background: linear-gradient(180deg, var(--menu-bg), #ffe0a6);
-  opacity: 1 !important;
+  background: var(--menu-bg);
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
-
-  color: var(--menu-ink);
   box-shadow: var(--menu-shadow);
+  color: var(--menu-ink);
 }
 
-/* 4) Kill any background image / decorative cross that was injected */
-#sidemenu, 
-#sidemenu .menu-inner,
-#sidemenu::before,
-#sidemenu .menu-inner::before,
-#sidemenu::after,
-#sidemenu .menu-inner::after{
+/* Remove any lingering image or overlay */
+#sidemenu, #sidemenu::before, #sidemenu::after,
+#sidemenu .menu-inner, #sidemenu .menu-inner::before, #sidemenu .menu-inner::after {
   background-image: none !important;
   content: none !important;
 }
 
-/* 5) Menu heading + general text inside menu */
+/* Menu heading */
 #sidemenu .menu-title,
 #sidemenu h1, #sidemenu h2, #sidemenu h3{
   font-family: "Cinzel", Georgia, "Times New Roman", serif;
   font-weight: 800;
-  letter-spacing: .02em;
   color: var(--menu-ink);
-  -webkit-font-smoothing: auto;  /* keeps weight looking stronger on Safari */
+  -webkit-font-smoothing: auto;
   text-rendering: optimizeLegibility;
 }
 
-/* 6) Buttons/links inside the menu (make them bold + outlined) */
-#sidemenu a, 
+/* Buttons */
+#sidemenu a,
 #sidemenu button,
 #sidemenu .menu-btn,
 #sidemenu .btn{
@@ -300,43 +291,51 @@
   font-family: "Cinzel", Georgia, "Times New Roman", serif;
   font-weight: 800;
   font-size: clamp(18px, 2.6vw, 24px);
-  line-height: 1.25;
   color: var(--menu-ink);
   background: var(--menu-card);
-  border: 3px solid var(--menu-border);   /* explicit outline (Safari-safe) */
+  border: 3px solid var(--menu-border);
   border-radius: 18px;
   padding: 16px 18px;
   margin: 18px 18px;
   box-shadow: 0 6px 18px rgba(0,0,0,.10);
-  -webkit-appearance: none;               /* prevents odd iOS button styling */
-  background-clip: padding-box;           /* keeps border visible on Safari */
+  -webkit-appearance: none;
+  background-clip: padding-box;
   text-align: center;
   text-decoration: none;
-  transition: transform .08s ease, box-shadow .12s ease;
+  transition: 
+    background-color .15s ease,
+    border-color .15s ease,
+    transform .08s ease,
+    box-shadow .12s ease;
 }
 
-/* 6a) Make the FIRST button look a touch stronger like your screenshot */
-#sidemenu .menu-inner > a:first-of-type,
-#sidemenu .menu-inner > .btn:first-of-type,
-#sidemenu a.primary{
+/* Highlight the first button slightly stronger */
+#sidemenu .menu-inner > a:first-of-type {
   background: #ffe6a8;
   border-color: #b57f25;
   box-shadow: 0 8px 20px rgba(0,0,0,.16), inset 0 0 0 1px rgba(255,255,255,.35);
 }
 
-/* 7) Hover/active (also helps tap feedback on iOS) */
+/* Hover and tap feedback */
 #sidemenu a:hover, 
-#sidemenu button:hover{
+#sidemenu button:hover,
+#sidemenu .menu-btn:hover,
+#sidemenu .btn:hover {
+  background: var(--menu-card-hover);
+  border-color: var(--menu-border-hover);
   transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(0,0,0,.14);
 }
+
 #sidemenu a:active, 
-#sidemenu button:active{
+#sidemenu button:active,
+#sidemenu .menu-btn:active,
+#sidemenu .btn:active {
   transform: translateY(0);
   box-shadow: 0 6px 18px rgba(0,0,0,.10);
 }
 
-/* 8) Divider line inside the menu */
+/* Divider line */
 #sidemenu hr{
   border: 0;
   height: 1px;
@@ -344,9 +343,8 @@
   background: linear-gradient(90deg, transparent, rgba(0,0,0,.15), transparent);
 }
 
-/* 9) Make sure any previous “90% translucent” overlays don’t leak through */
-#sidemenu .shade,
-#sidemenu .overlay{
+/* Disable any old overlay shade */
+#sidemenu .shade, #sidemenu .overlay{
   display: none !important;
   opacity: 0 !important;
 }
