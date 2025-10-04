@@ -408,3 +408,37 @@
 /*
 #sidemenu a, #sidemenu .btn { box-shadow: 0 4px 12px rgba(0,0,0,.10); }
 */
+/* === iOS Chrome drawer hard-clamp (keeps buttons inside on all mobile browsers) === */
+#sidemenu{
+  /* use transform instead of the newer `translate` prop */
+  transform: translateX(100%) !important;
+  /* absolutely prevent any paint outside the right edge */
+  clip-path: inset(0 round 0) !important;
+  overflow-x: hidden !important;
+  contain: paint !important;
+  will-change: transform;
+}
+#sidemenu.open{ transform: translateX(0) !important; }
+
+/* inner container: no horizontal scroll, a hair of side padding */
+#sidemenu .menu-inner{
+  padding-inline: 16px !important;
+  overflow-x: hidden !important;
+}
+
+/* buttons/links: remove side margins and cap width strictly */
+#sidemenu a,
+#sidemenu button,
+#sidemenu .btn,
+#sidemenu .menu-btn{
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-inline: 0 !important;          /* no left/right margins */
+  box-sizing: border-box !important;
+  overflow-wrap: anywhere;               /* long words wrap instead of widening */
+  word-break: break-word;
+  box-shadow: 0 4px 12px rgba(0,0,0,.10) !important; /* smaller shadow = no “peeks” */
+}
+
+/* (Optional) If you still see a 1px sliver on some devices, tighten even more: */
+/* #sidemenu a, #sidemenu .btn { box-shadow: 0 3px 10px rgba(0,0,0,.10) !important; } */
