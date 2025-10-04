@@ -20,7 +20,7 @@
   --maxw: 900px;
 }
 
-/* Fixed background */
+/* ---------- Background ---------- */
 .bg {
   position: fixed;
   inset: 0;
@@ -38,15 +38,20 @@
   transform: translateZ(0);
 }
 .shade {
-  position: fixed; inset: 0;
+  position: fixed;
+  inset: 0;
   background: radial-gradient(ellipse at center, rgba(255,255,255,.22), rgba(255,255,255,.10) 60%);
   z-index: -1;
 }
 
-/* Topbar */
+/* ---------- Topbar ---------- */
 .topbar {
-  position: sticky; top: 0; z-index: 10;
-  display: flex; align-items: center; gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 14px;
   padding: 14px 16px;
   background: color-mix(in oklab, var(--tint) 80%, transparent);
   backdrop-filter: blur(4px);
@@ -71,7 +76,7 @@
   outline-offset: 2px;
 }
 
-/* --- Side Menu --- */
+/* ---------- Side Menu ---------- */
 .sidemenu {
   position: fixed;
   inset: 0 0 0 auto;
@@ -82,18 +87,21 @@
   box-shadow: -8px 0 30px rgba(0,0,0,0.2);
   z-index: 20;
   border-left: 1px solid rgba(0,0,0,0.05);
-
-  /* subtle cross watermark */
-  background-image: 
-    linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0)),
-    url("../assets/cross-watermark.png");
-  background-size: 120px auto;
-  background-repeat: no-repeat;
-  background-position: center 80px;
-  background-blend-mode: lighten;
+  overflow: hidden;
 }
 .sidemenu.open { translate: 0 0; }
 
+/* Faint cross watermark */
+.sidemenu::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../assets/cross-watermark.png") center / 65% no-repeat;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+/* Menu inner container */
 .menu-inner {
   display: flex;
   flex-direction: column;
@@ -101,9 +109,12 @@
   padding: 20px;
   box-sizing: border-box;
   max-width: 100%;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
-/* Buttons */
+/* Menu buttons */
 .menu-btn {
   display: block;
   width: 100%;
@@ -131,28 +142,30 @@
   font-weight: 600;
 }
 
-/* Divider only for shop separation */
-.menu-divider {
-  border: none;
-  border-top: 1px solid rgba(0,0,0,0.15);
-  margin: 8px 0;
-}
-
-/* Placeholder — not clickable */
+/* Placeholder (not clickable) */
 .menu-btn.placeholder {
   opacity: 0.65;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-/* Settings */
+/* Divider between top and regular buttons */
+.menu-divider {
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.15);
+  margin: 8px 0;
+}
+
+/* Settings (brightness) */
 .settings {
+  margin-top: auto;
   border-top: 1px solid rgba(0,0,0,.10);
   padding-top: 12px;
+  background: transparent;
 }
 .settings label {
-  display:block;
-  font-weight:700;
+  display: block;
+  font-weight: 700;
   margin-bottom: 6px;
   color: var(--head);
 }
@@ -168,7 +181,7 @@
   z-index: 15;
 }
 
-/* Layout */
+/* ---------- Page Layout ---------- */
 .wrap {
   width: min(var(--maxw), 92vw);
   margin-inline: auto;
@@ -177,7 +190,7 @@
 .hero-gap { height: 34vh; }
 @media (min-width: 720px){ .hero-gap{ height: 38vh; } }
 
-/* Search */
+/* ---------- Search ---------- */
 .search {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -192,7 +205,7 @@
   color: var(--ink);
 }
 
-/* Cards */
+/* ---------- Cards ---------- */
 .card {
   background: var(--card);
   color: var(--ink);
@@ -208,7 +221,7 @@
   font-weight: 700;
 }
 
-/* Verse */
+/* Inner verse panel */
 .panel {
   background: var(--panel);
   border: 1px solid rgba(0,0,0,.04);
@@ -228,13 +241,13 @@
 }
 
 .actions {
-  display:flex;
-  gap:10px;
+  display: flex;
+  gap: 10px;
   margin-top: 10px;
   flex-wrap: wrap;
 }
 
-/* Buttons (main page) */
+/* ---------- Buttons ---------- */
 .btn {
   padding: 10px 14px;
   border-radius: 12px;
@@ -247,10 +260,13 @@
 .btn:active { filter: brightness(0.95); }
 .btn.ghost { background: var(--btn-ghost); }
 
-/* Footer */
+/* ---------- Footer ---------- */
 .footer {
-  position: sticky; bottom: 0;
-  display: flex; justify-content: center; align-items: center;
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 12px 16px;
   color: #6b5550;
   font-size: 14px;
@@ -258,7 +274,7 @@
   backdrop-filter: blur(3px);
 }
 
-/* Focus */
+/* ---------- Focus States ---------- */
 :focus-visible {
   outline: 2px solid var(--head);
   outline-offset: 2px;
