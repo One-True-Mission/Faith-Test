@@ -18,6 +18,7 @@
   --btn-ghost: #f7efe4;
   --btn-ink: #3b2a23;
 
+  --parch2: #ffefb8;                     /* used for shop button in menu */
   --shadow: 0 16px 40px rgba(0,0,0,.20);
   --radius: 16px;
   --maxw: 900px;
@@ -70,7 +71,7 @@
 }
 .hamburger:focus{ outline: 2px solid var(--head); outline-offset: 2px; }
 
-/* Off-canvas menu */
+/* Off-canvas menu (right drawer) */
 .sidemenu{
   position: fixed; inset: 0 0 0 auto;
   width: min(420px, 86vw);
@@ -81,57 +82,55 @@
   z-index: 20;
 }
 .sidemenu.open{ translate: 0 0; }
+
 .menu-inner{
   height: 100%;
   display: grid;
-  grid-template-rows: auto auto auto 1fr auto;  /* close + 2 buttons + links + settings */
+  grid-template-rows: auto 1fr auto; /* buttons, spacer, settings */
   gap: 14px;
   padding: 18px;
 }
-.sidemenu .close{
-  justify-self: end; border: 0; background: transparent; font-size: 28px; color: var(--head);
-}
 
-/* Buttons inside menu: full width, theme colors */
-.sidemenu .btn{
+/* New, clean menu button style */
+.menu-btn {
   display: block;
   width: 100%;
+  padding: 14px 18px;
+  margin: 8px 0;
+  border-radius: var(--radius);
   text-align: center;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(0,0,0,.08);
-  background: #f2e7d4;
-  color: #5a4336;
+  font-weight: 500;
+  background: rgba(255,255,255,0.9);
+  color: var(--ink);
   text-decoration: none;
-  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  box-shadow: var(--shadow);
+  transition: background 0.2s ease, transform 0.2s ease;
 }
+.menu-btn:hover { background: rgba(255,255,255,1); transform: translateY(-1px); }
 
-/* Support button — slightly distinct but not loud */
-.sidemenu .btn.shop{
-  background: linear-gradient(#f3dfc9, #ead2b8);
-  border: 1px solid #e0c7a8;
+/* Shop button stands out (but not loud) */
+.menu-btn-shop {
+  background: var(--parch2);
+  border: 2px solid var(--head);
   font-weight: 600;
 }
 
-/* Placeholder button style */
-.sidemenu .btn.alt{
-  background: #efe4d4;
-  border: 1px solid #e7d6c2;
+/* Thin dividers between items */
+.menu-divider {
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.15);
+  margin: 6px 0;
 }
 
-/* Default link entries */
-.sidemenu .links{ display: grid; gap: 10px; margin-top: 4px; }
-.sidemenu .link{
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: #f7efe4;
-  color: var(--ink);
-  text-decoration: none;
+/* Settings row (brightness slider) */
+.settings{
+  border-top: 1px solid rgba(0,0,0,.10);
+  padding-top: 12px;
 }
-
-.settings{ border-top: 1px solid rgba(0,0,0,.06); padding-top: 12px; }
 .settings label{ display:block; font-weight:700; margin-bottom: 6px; color: var(--head); }
 .settings input[type="range"]{ width: 100%; }
+
+/* Backdrop for when menu is open (controlled in app.js) */
 .backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 15; }
 
 /* Layout */
@@ -140,12 +139,14 @@
 .hero-gap{ height: 34vh; }
 @media (min-width: 720px){ .hero-gap{ height: 38vh; } }
 
+/* Search */
 .search{ display: grid; grid-template-columns: 1fr auto; gap: 10px; margin: 10px 0 18px; }
 .search input{
   padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,.08);
   background: var(--tint); color: var(--ink);
 }
 
+/* Cards */
 .card{
   background: var(--card);
   color: var(--ink);
@@ -154,7 +155,7 @@
   padding: clamp(14px, 2.4vw, 22px);
   margin: 14px 0;
 }
-/* Headers: same style/color across all cards */
+/* Headers on cards */
 .card h2, .card h3, .ref{
   margin: 0 0 8px;
   font-size: clamp(18px, 3.3vw, 24px);
@@ -210,38 +211,3 @@
 
 /* Accessibility focus */
 :focus-visible{ outline: 2px solid var(--head); outline-offset: 2px; }
-/* Side menu cleanup */
-.sidemenu .menu-inner {
-  padding: 20px;
-}
-
-.menu-btn {
-  display: block;
-  padding: 14px 18px;
-  margin: 8px 0;
-  border-radius: var(--radius);
-  text-align: center;
-  font-weight: 500;
-  background: rgba(255,255,255,0.85);
-  color: var(--ink);
-  box-shadow: var(--shadow);
-  transition: background 0.2s ease;
-}
-
-.menu-btn:hover {
-  background: rgba(255,255,255,1);
-}
-
-/* Shop button stands out */
-.menu-btn-shop {
-  background: var(--parch2);
-  font-weight: 600;
-  border: 2px solid var(--head);
-}
-
-/* Divider lines */
-.menu-divider {
-  border: none;
-  border-top: 1px solid rgba(0,0,0,0.15);
-  margin: 6px 0;
-}
