@@ -344,3 +344,7 @@
   display: none !important;
   opacity: 0 !important;
 }
+/* Hide the menu close button globally */
+.sidemenu .close {
+  display: none !important;
+}
