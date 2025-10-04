@@ -241,3 +241,112 @@
 
 /* ---------- Focus ---------- */
 :focus-visible{ outline: 2px solid var(--head); outline-offset: 2px; }
+
+/* === Menu – cross-browser consistent (Safari + Chrome) === */
+
+/* 1) Font just for the menu */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&display=swap');
+
+/* 2) Theme tokens for the menu */
+:root{
+  --menu-bg: #ffe7ba;          /* solid warm parchment */
+  --menu-card: #fff1cc;        /* button fill */
+  --menu-ink: #2b2118;         /* dark ink */
+  --menu-border: #c79a39;      /* darker golden outline */
+  --menu-shadow: 0 12px 30px rgba(0,0,0,.12);
+}
+
+/* 3) Side menu panel */
+#sidemenu{
+  /* remove any translucent/blur backgrounds (fixes Safari differences) */
+  background: linear-gradient(180deg, var(--menu-bg), #ffe0a6);
+  opacity: 1 !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+
+  color: var(--menu-ink);
+  box-shadow: var(--menu-shadow);
+}
+
+/* 4) Kill any background image / decorative cross that was injected */
+#sidemenu, 
+#sidemenu .menu-inner,
+#sidemenu::before,
+#sidemenu .menu-inner::before,
+#sidemenu::after,
+#sidemenu .menu-inner::after{
+  background-image: none !important;
+  content: none !important;
+}
+
+/* 5) Menu heading + general text inside menu */
+#sidemenu .menu-title,
+#sidemenu h1, #sidemenu h2, #sidemenu h3{
+  font-family: "Cinzel", Georgia, "Times New Roman", serif;
+  font-weight: 800;
+  letter-spacing: .02em;
+  color: var(--menu-ink);
+  -webkit-font-smoothing: auto;  /* keeps weight looking stronger on Safari */
+  text-rendering: optimizeLegibility;
+}
+
+/* 6) Buttons/links inside the menu (make them bold + outlined) */
+#sidemenu a, 
+#sidemenu button,
+#sidemenu .menu-btn,
+#sidemenu .btn{
+  display: block;
+  width: 100%;
+  font-family: "Cinzel", Georgia, "Times New Roman", serif;
+  font-weight: 800;
+  font-size: clamp(18px, 2.6vw, 24px);
+  line-height: 1.25;
+  color: var(--menu-ink);
+  background: var(--menu-card);
+  border: 3px solid var(--menu-border);   /* explicit outline (Safari-safe) */
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin: 18px 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.10);
+  -webkit-appearance: none;               /* prevents odd iOS button styling */
+  background-clip: padding-box;           /* keeps border visible on Safari */
+  text-align: center;
+  text-decoration: none;
+  transition: transform .08s ease, box-shadow .12s ease;
+}
+
+/* 6a) Make the FIRST button look a touch stronger like your screenshot */
+#sidemenu .menu-inner > a:first-of-type,
+#sidemenu .menu-inner > .btn:first-of-type,
+#sidemenu a.primary{
+  background: #ffe6a8;
+  border-color: #b57f25;
+  box-shadow: 0 8px 20px rgba(0,0,0,.16), inset 0 0 0 1px rgba(255,255,255,.35);
+}
+
+/* 7) Hover/active (also helps tap feedback on iOS) */
+#sidemenu a:hover, 
+#sidemenu button:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.14);
+}
+#sidemenu a:active, 
+#sidemenu button:active{
+  transform: translateY(0);
+  box-shadow: 0 6px 18px rgba(0,0,0,.10);
+}
+
+/* 8) Divider line inside the menu */
+#sidemenu hr{
+  border: 0;
+  height: 1px;
+  margin: 18px 18px 10px;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,.15), transparent);
+}
+
+/* 9) Make sure any previous “90% translucent” overlays don’t leak through */
+#sidemenu .shade,
+#sidemenu .overlay{
+  display: none !important;
+  opacity: 0 !important;
+}
